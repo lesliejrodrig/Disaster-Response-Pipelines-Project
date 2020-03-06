@@ -15,6 +15,8 @@ A Python script, process_data.py, writes a data cleaning pipeline that:<br/>
     Merges the two datasets<br/>
     Cleans the data<br/>
     Stores it in a SQLite database<br/>
+Disaster_Categories.csv<br/>
+Disaster_Messages.csv<br/>
 
 2. Models Folder<br/>
 A Python script, train_classifier.py, writes a machine learning pipeline that:<br/>
