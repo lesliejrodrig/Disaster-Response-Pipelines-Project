@@ -10,22 +10,12 @@ Below are a few screenshots of the web app.
 ### Project Components
 There are three components you'll find in this project.<br/>
 1. Data Folder<br/>
-A Python script, process_data.py, writes a data cleaning pipeline that:<br/>
-    Loads the messages and categories datasets<br/>
-    Merges the two datasets<br/>
-    Cleans the data<br/>
-    Stores it in a SQLite database<br/>
-Disaster_Categories.csv<br/>
-Disaster_Messages.csv<br/>
+-A Python script, process_data.py, that writes a data cleaning pipeline that loads the messages and categories datasets, merges the two datasets, cleans the data, and stores it in a SQLite database (DisasterResponse.db)<br/>
+-Disaster_Categories.csv<br/>
+-Disaster_Messages.csv<br/>
 
 2. Models Folder<br/>
-A Python script, train_classifier.py, writes a machine learning pipeline that:<br/>
-    Loads data from the SQLite database<br/>
-    Splits the dataset into training and test sets<br/>
-    Builds a text processing and machine learning pipeline<br/>
-    Trains and tunes a model using GridSearchCV<br/>
-    Outputs results on the test set<br/>
-    Exports the final model as a pickle file<br/>
+-A Python script, train_classifier.py, writes a machine learning pipeline that loads data from the SQLite database splits the dataset into training and test sets, builds a text processing and machine learning pipeline, trains and tunes a model using GridSearchCV, outputs results on the test set, and exports the final model as a pickle file<br/>
 
 3. App Folder<br/>
 This is a Flask Web App that has data visualizations using Plotly and leverages the model created from our dataset. You can insert sample text to have it classified by our model and see the results.
