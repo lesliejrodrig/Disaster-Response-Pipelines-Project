@@ -46,9 +46,11 @@ def index():
     print(df.columns)
     print(df.head())
 
+    #get count for each category
     category_count = df.iloc[:,4:].sum().sort_values(ascending=False)
     category_names = list(category_count.index)
 
+    #get count for aid_related category, grouping by genre for visualization
     aid_related = df[df['aid_related']==1].groupby('genre').count()['message']
     not_aid_related = df[df['aid_related']==0].groupby('genre').count()['message']
     genre_names = list(aid_related.index)

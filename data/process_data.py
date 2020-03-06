@@ -3,6 +3,15 @@ import pandas as pd
 from sqlalchemy import create_engine
 
 def load_data(messages_filepath, categories_filepath):
+    """
+    Load Data Function
+    
+    Input:
+        messages_filepath - Path to the CSV file containing messages
+        categories_filepath - Path to the CSV file containing categories
+    Output:
+        df - Combined data containing messages and categories
+    """
     messages = pd.read_csv(messages_filepath)
     categories = pd.read_csv(categories_filepath)
     df = messages.merge(categories, on='id')
@@ -11,6 +20,14 @@ def load_data(messages_filepath, categories_filepath):
 
 
 def clean_data(df):
+    """
+    Clean Data Function
+    
+    Input:
+        df - Combined data containing messages and categories
+    Output:
+        df - Clean version of combined data containing messages and categories
+    """
     categories = df['categories'].str.split(';', expand=True)
 
     row = categories.iloc[0,:]
@@ -32,6 +49,13 @@ def clean_data(df):
 
 
 def save_data(df, database_filename):
+    """
+    Save Data Function
+    
+    Input:
+        df - Clean version of combined data containing messages and categories
+        database_filename - Path to SQLite database
+    """
     engine = create_engine('sqlite:///' + database_filename)
     df.to_sql('MessagesCategories', engine, index=False)
 

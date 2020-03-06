@@ -19,26 +19,18 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
 from sklearn.model_selection import GridSearchCV
 
-#custom_transformer
-class StartingVerbExtractor(BaseEstimator, TransformerMixin):
-
-    def starting_verb(self, text):
-        sentence_list = nltk.sent_tokenize(text)
-        for sentence in sentence_list:
-            pos_tags = nltk.pos_tag(tokenize(sentence))
-            first_word, first_tag = pos_tags[0]
-            if first_tag in ['VB', 'VBP'] or first_word == 'RT':
-                return True
-        return False
-
-    def fit(self, x, y=None):
-        return self
-
-    def transform(self, X):
-        X_tagged = pd.Series(X).apply(self.starting_verb)
-        return pd.DataFrame(X_tagged)
-
 def load_data(database_filepath):
+    """
+    Load Data Function
+    
+    Input:
+        database_filepath - Path to SQLite destination database (ex: disaster_response.db)
+    Output:
+        X - dataframe containing features
+        Y - dataframe containing labels
+        Y.columns - List of columns
+    """
+
     engine = create_engine('sqlite:///' + database_filepath)
     df = pd.read_sql_table('MessagesCategories', engine)
     X = df['message']
@@ -47,6 +39,14 @@ def load_data(database_filepath):
 
 
 def tokenize(text):
+    """
+    Tokenize Text Function 
+    
+    Input:
+        text - Text message to be tokenized
+    Output:
+        clean_tokens - List of tokens extracted from the text message
+    """
     url_regex = 'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
     
     detected_urls = re.findall(url_regex, text)
@@ -65,18 +65,13 @@ def tokenize(text):
 
 
 def build_model():
-    pipeline = Pipeline([
-        ('features', FeatureUnion([
-            ('text_pipeline', Pipeline([
-                ('vect', CountVectorizer(tokenizer=tokenize)),
-                ('tfidf_transformer', TfidfTransformer())
-            ])),
-
-            ('starting_verb_transformer', StartingVerbExtractor())
-        ])),
-        ('clf', MultiOutputClassifier(RandomForestClassifier()))
-    ])
-
+    """
+    Build Model function
+    Input:
+        None
+    Output:
+        A GridSearchCV Pipeline
+    """
     pipeline = Pipeline([
                 ('vect', CountVectorizer(tokenizer=tokenize)),
                 ('tfidf_transformer', TfidfTransformer()),
@@ -91,6 +86,17 @@ def build_model():
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
+    """
+    Evaluate Model function
+    
+    This function applies a ML pipeline to a test set and prints out the model performance
+    
+    Input:
+        pipeline - My GridSearchCV Pipeline
+        X_test - Test features
+        Y_test - Test labels
+        category_names - label names
+    """
     y_predict_test = model.predict(X_test)
     y_predict_df = pd.DataFrame(y_predict_test, columns = Y_test.columns)
     for column in Y_test.columns:
@@ -103,6 +109,15 @@ def evaluate_model(model, X_test, Y_test, category_names):
 
 
 def save_model(model, model_filepath):
+    """
+    Save Model function
+    
+    Saves trained model as Pickle file
+    
+    Input:
+        model - My GridSearchCV model
+        model_filepath - path to save .pkl file
+    """
     pickle.dump(model, open(model_filepath, 'wb'))
     pass
 
